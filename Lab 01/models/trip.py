@@ -27,3 +27,5 @@ class Trip:
         self.status = "Completed"
         PaymentService.process_payment(self.rider.preferred_payment_method, self.fare)
         NotificationService.send_notification(f"Trip completed. Fare: ${self.fare}")
+        self.driver.update_location(self.dropoff_location)
+

@@ -2,13 +2,14 @@ from models.driver import Driver
 from models.rider import Rider
 from models.payment_method import CreditCard, PayPal, DigitalWallet
 
-# Sample run
+# Sample
+print("\nWelcome to AmioJabo!\n")
 
-# Create Rider and Driver
+# Creating Rider and Driver
 rider = Rider("Adolt Hitler")
 driver = Driver("Sheikh Hasina", "Boardbazar", "Luxury")
 
-# Set rider's preferred payment method
+# Setting rider's preferred payment method
 rider.preferred_payment_method = CreditCard()
 
 # Request a ride
@@ -17,7 +18,7 @@ trip = rider.request_ride("Farmgate", "Airport", "Luxury")
 # Driver accepts the ride
 driver.accept_ride(trip)
 
-# Complete the trip and process payment
+# Complete the trip and payment
 trip.complete_trip()
 
 # Rating the driver and rider

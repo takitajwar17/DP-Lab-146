@@ -1,4 +1,4 @@
-from models.trip import Trip  # Ensure you import the Trip class
+from models.trip import Trip
 
 class Rider:
     def __init__(self, name):
