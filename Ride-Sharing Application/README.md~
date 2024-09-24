@@ -52,7 +52,7 @@ The services directory contains utility classes that handle background tasks suc
 
 The project implements the following design patterns to ensure flexibility, maintainability, and scalability:
 
-1. **Factory Pattern**: Used in `RideType` to create different ride types dynamically (Carpool, Luxury, Bike). Used in `PaymentMethod` to instantiate different payment methods dynamically (Credit Card, PayPal, Digital Wallet) based on user input.
+1. **Factory Pattern**: Used in `RideType` to create different ride types dynamically (Carpool, Luxury, Bike).
 2. **Strategy Pattern**: Applied in `PaymentMethod` to allow flexible payment options (Credit Card, PayPal, Digital Wallet).
 3. **Dependency Injection**: Injected payment methods into the trip class to handle payments without tightly coupling the `Trip` class to specific payment types.
 4. **Service Pattern**: `NotificationService` and `PaymentService` handle non-core functionalities like sending notifications and processing payments.

@@ -20,7 +20,7 @@ driver.accept_ride(trip)
 
 # Asking the user if they want to change the payment method
 change_payment = input("Do you want to change the payment method? (yes/no) ").lower()
-if change_payment == 'yes' or change_payment == 'y':
+if change_payment == 'yes':
     payment_options = {
         '1': "CreditCard",
         '2': "PayPal",
