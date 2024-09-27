@@ -1,0 +1,2 @@
+Another example text for encryption testing.
+Happy encrypting and decrypting!

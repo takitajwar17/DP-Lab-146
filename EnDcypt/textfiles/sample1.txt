@@ -1,0 +1,3 @@
+Hello, this is a sample text file.
+We are testing encryption algorithms with it.
+This should work with AES, DES, and Caesar Cipher.
