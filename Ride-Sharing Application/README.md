@@ -1,4 +1,4 @@
-﻿# Lab 01: AmioJabo-Ride-Sharing-Application
+﻿# Ride-Sharing-Application
 
 ## 1. **Project Overview**
 
