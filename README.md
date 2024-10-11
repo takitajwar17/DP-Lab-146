@@ -11,4 +11,11 @@ This repository contains the solutions and implementations for various lab exerc
 2. **EnDcypt _(Java)_:**
    - Lab 03 (27 Sept, 2024)
 
+3. **IUTBeans _(Java)_:**
+   - Lab 04 (04 Oct, 2024)
+
+4. **Bundlers _(Java)_:**
+   - Lab 05 (11 Oct, 2024)
+
+
 Each folder contains the respective code and necessary documentation.
