@@ -20,6 +20,6 @@ This repository contains the solutions and implementations for various lab exerc
 5. **NotifiDapters _(Java)_:**
    - Lab 06 (18 Oct, 2024)
 
-7. **SoGossip _(Java)_:**
-   - Lab 06 (8 Oct, 2024)
+6. **SoGossip _(Java)_:**
+   - Lab 07 (8 Oct, 2024)
 Each folder contains the respective code and necessary documentation.
