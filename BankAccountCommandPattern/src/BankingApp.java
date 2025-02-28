@@ -1,6 +1,15 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import command.CreateAccountCommand;
+import command.DepositCommand;
+import command.ICommand;
+import command.TransferCommand;
+import command.WithdrawCommand;
+import model.Transaction;
+import query.AccountQuery;
+import repository.AccountRepository;
 
 public class BankingApp {
     private static AccountRepository repository = new AccountRepository();
@@ -21,6 +30,7 @@ public class BankingApp {
             System.out.println("4. Withdraw");
             System.out.println("5. Check Balance");
             System.out.println("6. View Transaction History");
+            System.out.println("7. Transfer Money");
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
 
@@ -105,6 +115,48 @@ public class BankingApp {
                     }
                     break;
 
+                case 7:
+                    if (currentAccount == null) {
+                        System.out.println("No account selected!");
+                        break;
+                    }
+                    List<String> toAccountIds = new ArrayList<>();
+                    boolean addingRecipients = true;
+                    
+                    while (addingRecipients) {
+                        System.out.print("Enter recipient account ID (or 'done' to finish): ");
+                        String toAccountId = scanner.nextLine();
+                        
+                        if (toAccountId.equalsIgnoreCase("done")) {
+                            addingRecipients = false;
+                        } else {
+                            if (repository.findById(toAccountId) == null) {
+                                System.out.println("Recipient account not found!");
+                            } else {
+                                toAccountIds.add(toAccountId);
+                                System.out.println("Recipient added successfully.");
+                            }
+                        }
+                    }
+                    
+                    if (toAccountIds.isEmpty()) {
+                        System.out.println("No valid recipients added!");
+                        break;
+                    }
+                    
+                    System.out.print("Enter transfer amount: ");
+                    double transferAmount = scanner.nextDouble();
+                    scanner.nextLine();  // consume newline
+                    System.out.print("Enter description: ");
+                    String transferDesc = scanner.nextLine();
+                    TransferCommand transferCommand = new TransferCommand(currentAccount, toAccountIds, transferAmount, transferDesc, repository);
+                    transferCommand.execute();
+                    if (transferCommand.isSucceeded()) {
+                        System.out.println("Transfer successful");
+                    } else {
+                        System.out.println("Transfer failed - Insufficient funds");
+                    }
+                    break;
                 case 0:
                     running = false;
                     System.out.println("Thank you for using Banking Application");

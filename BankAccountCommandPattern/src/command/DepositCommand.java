@@ -1,3 +1,8 @@
+package command;
+
+import model.BankAccount;
+import repository.AccountRepository;
+
 public class DepositCommand implements ICommand {
     private String accountId;
     private double amount;

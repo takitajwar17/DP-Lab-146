@@ -1,4 +1,8 @@
-// AccountQuery.java
+package query;
+
+import model.BankAccount;
+import model.Transaction;
+import repository.AccountRepository;
 import java.util.List;
 
 public class AccountQuery {
