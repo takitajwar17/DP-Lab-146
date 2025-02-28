@@ -34,14 +34,49 @@ public class BankingApp {
             System.out.println("0. Exit");
             System.out.print("Enter choice: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();  // consume newline
+            int choice = -1;
+            boolean validInput = false;
+            
+            while (!validInput) {
+                try {
+                    if (scanner.hasNextInt()) {
+                        choice = scanner.nextInt();
+                        validInput = true;
+                    } else {
+                        System.out.println("Invalid input! Please enter a number.");
+                        System.out.print("Enter choice: ");
+                    }
+                    scanner.nextLine();  // consume newline
+                } catch (Exception e) {
+                    System.out.println("Error reading input. Please try again.");
+                    System.out.print("Enter choice: ");
+                    scanner.nextLine();  // clear the invalid input
+                }
+            }
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter initial deposit amount: ");
-                    double initialDeposit = scanner.nextDouble();
-                    scanner.nextLine();  // consume newline
+                    double initialDeposit = 0;
+                    boolean validDepositInput = false;
+                    while (!validDepositInput) {
+                        System.out.print("Enter initial deposit amount: ");
+                        try {
+                            if (scanner.hasNextDouble()) {
+                                initialDeposit = scanner.nextDouble();
+                                if (initialDeposit < 0) {
+                                    System.out.println("Invalid input! Deposit amount cannot be negative.");
+                                } else {
+                                    validDepositInput = true;
+                                }
+                            } else {
+                                System.out.println("Invalid input! Please enter a valid number.");
+                            }
+                            scanner.nextLine();  // consume newline
+                        } catch (Exception e) {
+                            System.out.println("Error reading input. Please try again.");
+                            scanner.nextLine();  // clear the invalid input
+                        }
+                    }
                     String accountId = UUID.randomUUID().toString().substring(0, 8);
                     ICommand createCommand = new CreateAccountCommand(accountId, initialDeposit, repository);
                     createCommand.execute();
@@ -132,6 +167,10 @@ public class BankingApp {
                         } else {
                             if (repository.findById(toAccountId) == null) {
                                 System.out.println("Recipient account not found!");
+                            } else if (toAccountId.equals(currentAccount)) {
+                                System.out.println("Cannot transfer to your own account!");
+                            } else if (toAccountIds.contains(toAccountId)) {
+                                System.out.println("This recipient is already added!");
                             } else {
                                 toAccountIds.add(toAccountId);
                                 System.out.println("Recipient added successfully.");
@@ -149,14 +188,31 @@ public class BankingApp {
                     scanner.nextLine();  // consume newline
                     System.out.print("Enter description: ");
                     String transferDesc = scanner.nextLine();
-                    TransferCommand transferCommand = new TransferCommand(currentAccount, toAccountIds, transferAmount, transferDesc, repository);
-                    transferCommand.execute();
-                    if (transferCommand.isSucceeded()) {
-                        System.out.println("Transfer successful");
+                    
+                    // Show confirmation prompt
+                    double totalAmount = transferAmount * toAccountIds.size();
+                    System.out.println("\nTransfer Details:");
+                    System.out.println("From Account: " + currentAccount);
+                    System.out.println("To Accounts: " + String.join(", ", toAccountIds));
+                    System.out.println("Amount per recipient: $" + transferAmount);
+                    System.out.println("Total amount to be withdrawn: $" + totalAmount);
+                    System.out.println("Description: " + transferDesc);
+                    System.out.print("\nConfirm transfer? (yes/no): ");
+                    
+                    String confirmation = scanner.nextLine();
+                    if (confirmation.equalsIgnoreCase("yes")) {
+                        TransferCommand transferCommand = new TransferCommand(currentAccount, toAccountIds, transferAmount, transferDesc, repository);
+                        transferCommand.execute();
+                        if (transferCommand.isSucceeded()) {
+                            System.out.println("Transfer successful");
+                        } else {
+                            System.out.println("Transfer failed - Insufficient funds");
+                        }
                     } else {
-                        System.out.println("Transfer failed - Insufficient funds");
+                        System.out.println("Transfer cancelled");
                     }
                     break;
+
                 case 0:
                     running = false;
                     System.out.println("Thank you for using Banking Application");
@@ -164,6 +220,7 @@ public class BankingApp {
 
                 default:
                     System.out.println("Invalid choice");
+                    break;
             }
         }
         scanner.close();

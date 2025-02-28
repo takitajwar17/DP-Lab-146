@@ -29,6 +29,22 @@ public class TransferCommand implements ICommand {
             return;
         }
 
+        // Remove duplicates and self-transfers
+        List<String> uniqueRecipients = new ArrayList<>();
+        for (String toId : toAccountIds) {
+            if (!toId.equals(fromAccountId) && !uniqueRecipients.contains(toId)) {
+                uniqueRecipients.add(toId);
+            }
+        }
+
+        if (uniqueRecipients.isEmpty()) {
+            succeeded = false;
+            return;
+        }
+
+        // Update toAccountIds with unique recipients
+        toAccountIds = uniqueRecipients;
+
         BankAccount fromAccount = repository.findById(fromAccountId);
         if (fromAccount == null) {
             succeeded = false;
@@ -46,18 +62,19 @@ public class TransferCommand implements ICommand {
             toAccounts.add(toAccount);
         }
 
-        // Calculate amount per recipient
-        double amountPerRecipient = amount / toAccountIds.size();
+        // Each recipient will receive the full amount
         
         // Attempt withdrawal for total amount
-        succeeded = fromAccount.withdraw(amount, "Transfer to multiple accounts: " + description);
+        // Calculate total amount needed (amount × number of recipients)
+        double totalAmount = amount * toAccountIds.size();
+        succeeded = fromAccount.withdraw(totalAmount, "Transfer to multiple accounts (" + toAccountIds.size() + " recipients): " + description);
         
         if (succeeded) {
             // Deposit to each recipient
             for (int i = 0; i < toAccounts.size(); i++) {
                 BankAccount toAccount = toAccounts.get(i);
                 String toId = toAccountIds.get(i);
-                toAccount.deposit(amountPerRecipient, "Transfer from " + fromAccountId + " (Split payment): " + description);
+                toAccount.deposit(amount, "Transfer from " + fromAccountId + ": " + description);
                 repository.save(toAccount);
             }
             repository.save(fromAccount);
